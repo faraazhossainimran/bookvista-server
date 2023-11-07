@@ -26,6 +26,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const roomsCollection = client.db("bookvista").collection("rooms");
+    const bookingCollection = client.db("bookvista").collection("booking");
     // get all rooms data
     app.get('/rooms', async(req, res) => {
         const result = await roomsCollection.find().toArray();
@@ -38,6 +39,13 @@ async function run() {
         const result = await roomsCollection.findOne(query);
         res.send(result)
     })
+    // book room
+    app.post('/bookings', async(req, res)=>{
+      const booking = req.body;
+      console.log('from booking', booking);
+      const result = await bookingCollection.insertOne(booking);
+      res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
