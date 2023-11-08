@@ -45,45 +45,46 @@ async function run() {
       const result = await bookingCollection.insertOne(booking);
       res.send(result);
     });
-    app.get('/bookings', async(req, res)=> {
+    app.get("/bookings", async (req, res) => {
       console.log(req.query.email);
       let query = {};
-      if(req.query?.email){
-        query = {userEmail: req.query.email}
+      if (req.query?.email) {
+        query = { userEmail: req.query.email };
       }
-      const result = await bookingCollection.find(query).toArray()
-      res.send(result)
-    })
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
     // get a booked room
     app.get("/bookings", async (req, res) => {
       const result = await bookingCollection.find().toArray();
       res.send(result);
     });
     // Delete a specific bookedroom
-    app.delete('/bookings/:id', async(req, res)=> {
+    app.delete("/bookings/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await bookingCollection.deleteOne(query);
       console.log(result);
-      res.send(result)
-    })
+      res.send(result);
+    });
     // patch a rooms reviews
-    app.patch('/bookings/:id', async(req, res) => {
+    app.patch("/bookings/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) };
       const newReviews = req.body;
+      const object = {
+        user_name: newReviews.user_name,
+        rating: newReviews.rating,
+        review_text: newReviews.review_text,
+      };
       const updatedDoc = {
-        $set: {
-          user_name : newReviews.user_name,
-          rating : newReviews.rating,
-          review_text : newReviews.review_text
-        }
-      }
-      const result = await roomsCollection.updateOne(query, updatedDoc)
+        $push: {reviews: object},
+      };
+      const result = await roomsCollection.updateOne(query, updatedDoc);
       console.log(newReviews);
       console.log(result);
-      res.send(result)
-    })
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
