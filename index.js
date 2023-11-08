@@ -67,6 +67,23 @@ async function run() {
       console.log(result);
       res.send(result)
     })
+    // patch a rooms reviews
+    app.patch('/bookings/:id', async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const newReviews = req.body;
+      const updatedDoc = {
+        $set: {
+          user_name : newReviews.user_name,
+          rating : newReviews.rating,
+          review_text : newReviews.review_text
+        }
+      }
+      const result = await roomsCollection.updateOne(query, updatedDoc)
+      console.log(newReviews);
+      console.log(result);
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
