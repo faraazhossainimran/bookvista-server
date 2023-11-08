@@ -81,10 +81,15 @@ async function run() {
         $push: {reviews: object},
       };
       const result = await roomsCollection.updateOne(query, updatedDoc);
-      console.log(newReviews);
-      console.log(result);
       res.send(result);
     });
+    // get reviews 
+    app.get('/reviews/:id', async(req, res)=> {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await roomsCollection.findOne(query);
+      res.send(result);
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
