@@ -75,6 +75,7 @@ async function run() {
       const object = {
         user_name: newReviews.user_name,
         rating: newReviews.rating,
+        userPhoto: newReviews.userPhoto,
         review_text: newReviews.review_text,
       };
       const updatedDoc = {
